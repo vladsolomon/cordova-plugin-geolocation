@@ -27,6 +27,8 @@ description: Access GPS data.
 
 # cordova-plugin-geolocation
 
+:warning: This plugin is SUPPORTED by OutSystems. Customers entitled to Support Services may obtain assistance through Support.
+
 This plugin provides information about the device's location, such as
 latitude and longitude.
 
