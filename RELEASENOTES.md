@@ -20,6 +20,13 @@
 -->
 # Release Notes
 
+### 2.4.1 (Dec 07, 2016)
+* [CB-12224](https://issues.apache.org/jira/browse/CB-12224) Updated version and RELEASENOTES.md for release 2.4.1
+* corrected KCLAuthorizationStatus error, changed to always removed user of [manager locationServicesEnabled].  Must return [CLLocationManager locationServicesEnabled] or 'none'
+* [CB-11962](https://issues.apache.org/jira/browse/CB-11962) (ios) Added variable for setting NSLocationWhenInUseUsageDescription
+* [CB-11917](https://issues.apache.org/jira/browse/CB-11917) - Remove pull request template checklist item: "iCLA has been submitted…"
+* [CB-11904](https://issues.apache.org/jira/browse/CB-11904) Incremented plugin version.
+
 ### 2.4.0 (Sep 26, 2016)
 * **Ubuntu** Fix altitude & accuracies retrieval
 * [CB-11875](https://issues.apache.org/jira/browse/CB-11875) added `android.hardware.location.gps` `uses-feature`.
