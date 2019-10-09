@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-geolocation",
-  "version": "4.0.1-OS1",
+  "version": "4.0.1-OS2",
   "description": "Cordova Geolocation Plugin",
   "cordova": {
     "id": "cordova-plugin-geolocation",
