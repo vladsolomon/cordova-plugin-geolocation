@@ -172,11 +172,6 @@ error, the `geolocationError` callback is passed a
 </edit-config>
 ```
  
-### Android Quirks
-
-If Geolocation service is turned off the `onError` callback is invoked after `timeout` interval (if specified).
-If `timeout` parameter is not specified then no callback is called.
-
 ## navigator.geolocation.watchPosition
 
 Returns the device's current position when a change in position is detected.
@@ -243,11 +238,6 @@ Optional parameters to customize the retrieval of the geolocation
 - __timeout__: The maximum length of time (milliseconds) that is allowed to pass from the call to `navigator.geolocation.getCurrentPosition` or `geolocation.watchPosition` until the corresponding `geolocationSuccess` callback executes. If the `geolocationSuccess` callback is not invoked within this time, the `geolocationError` callback is passed a `PositionError.TIMEOUT` error code. (Note that when used in conjunction with `geolocation.watchPosition`, the `geolocationError` callback could be called on an interval every `timeout` milliseconds!) _(Number)_
 
 - __maximumAge__: Accept a cached position whose age is no greater than the specified time in milliseconds. _(Number)_
-
-### Android Quirks
-
-If Geolocation service is turned off the `onError` callback is invoked after `timeout` interval (if specified).
-If `timeout` parameter is not specified then no callback is called.
 
 ## navigator.geolocation.clearWatch
 
@@ -330,6 +320,20 @@ callback function when an error occurs with navigator.geolocation.
   - Returned when the device is unable to retrieve a position. In general, this means the device is not connected to a network or can't get a satellite fix.
 - `PositionError.TIMEOUT`
   - Returned when the device is unable to retrieve a position within the time specified by the `timeout` included in `geolocationOptions`. When used with `navigator.geolocation.watchPosition`, this error could be repeatedly passed to the `geolocationError` callback every `timeout` milliseconds.
+
+
+### Errors (This list is currently only for android)
+
+| Code | Message                                                | Reason                                                                                                                                                                  |
+|------|--------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 100  | Location permission request denied                     | User did not allow the app to retrieve position information.                                                                                                            |
+| 101  | Google Play Services error user resolvable             | Google Play Services is not installed, enabled on this device or the version  installed on this device is older than the one required. Can be resolved via user action. |
+| 102  | Google Play Services error                             | Google Play Services error that cannot be resolved via user action.                                                                                                     |
+| 103  | Location result serialization error                    | Failure in converting the location object into JSON                                                                                                                     |
+| 104  | Watch id not found                                     | Trying to clear an invalid Watch Id will result in this error                                                                                                           |
+| 105  | Current location settings can not satisfy this request | The relevant system settings on the device to carry out the desired location request are not available. Can be resolved via user action.                                |
+| 106  | Location settings error                                | The relevant system settings on the device to carry out the desiredlocation request are not available. Cannot be resolved.                                              |
+| 107  | Could not retrieve location                            | Returned when the device is unable to retrieve a position.                                                                                                              |
 
 
 ## <a id="sample"></a>Sample: Get the weather, find stores, and see photos of things nearby with Geolocation ##
