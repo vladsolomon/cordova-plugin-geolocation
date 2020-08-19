@@ -94,6 +94,12 @@ public class Geolocation extends CordovaPlugin implements OnLocationResultEventL
 
     @Override
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
+        // In case a permission request is cancelled, the permissions and grantResults arrays are empty.
+        // We must exit immediately to avoid calling getLocation erroneously.
+        if(permissions == null || permissions.length == 0) {
+            return;
+        }
+
         LocationContext lc = locationContexts.get(requestCode);
 
         for (int grantResult : grantResults) {
