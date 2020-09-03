@@ -55,10 +55,13 @@ function parseParameters (options) {
 }
 
 // Returns a timeout failure, closed over a specified timeout value and error callback.
-function createTimeout (errorCallback, timeout) {
+function createTimeout (errorCallback, timeout, isWatch, id) {
     var t = setTimeout(function () {
         clearTimeout(t);
         t = null;
+        if(isWatch === true){
+            geolocation.clearWatch(id);
+        }
         errorCallback({
             code: PositionError.TIMEOUT,
             message: 'Position retrieval timed out.'
@@ -135,7 +138,7 @@ var geolocation = {
                 // If the timeout value was not set to Infinity (default), then
                 // set up a timeout function that will fire the error callback
                 // if no successful position was retrieved before timeout expired.
-                timeoutTimer.timer = createTimeout(fail, options.timeout);
+                timeoutTimer.timer = createTimeout(fail, options.timeout, false, null);
             } else {
                 // This is here so the check in the win function doesn't mess stuff up
                 // may seem weird but this guarantees timeoutTimer is
@@ -174,7 +177,7 @@ var geolocation = {
         var win = function (p) {
             clearTimeout(timers[id].timer);
             if (options.timeout !== Infinity) {
-                timers[id].timer = createTimeout(fail, options.timeout);
+                timers[id].timer = createTimeout(fail, options.timeout, false, null);
             }
             var pos = new Position(
                 {
@@ -197,7 +200,7 @@ var geolocation = {
             // If the timeout value was not set to Infinity (default), then
             // set up a timeout function that will fire the error callback
             // if no successful position was retrieved before timeout expired.
-            timers[id].timer = createTimeout(fail, options.timeout);
+            timers[id].timer = createTimeout(fail, options.timeout, true, id);
         } else {
             // This is here so the check in the win function doesn't mess stuff up
             // may seem weird but this guarantees timeoutTimer is
