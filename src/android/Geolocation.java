@@ -112,14 +112,16 @@ public class Geolocation extends CordovaPlugin implements OnLocationResultEventL
             }
         }
 
-        switch(lc.getType()) {
-            case RETRIEVAL:
-                getLocation(lc);
-                break;
+        if (lc != null) {
+            switch(lc.getType()) {
+                case RETRIEVAL:
+                    getLocation(lc);
+                    break;
 
-            case UPDATE:
-                addWatch(lc);
-                break;
+                case UPDATE:
+                    addWatch(lc);
+                    break;
+            }
         }
     }
 
