@@ -286,6 +286,7 @@ public class Geolocation extends CordovaPlugin implements OnLocationResultEventL
                         ResolvableApiException resolvable = (ResolvableApiException) e;
                         resolvable.startResolutionForResult(cordova.getActivity(),
                                 REQUEST_CHECK_SETTINGS);
+                        requestLocationUpdates(locationContext, request);
                     } catch (IntentSender.SendIntentException sendEx) {
                         // Ignore the error.
                     }
