@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 2021-04-23
+- Fix: Fixed checkGooglePlayServicesAvailable method to show the user an error dialog when the error can be resolved (https://outsystemsrd.atlassian.net/browse/RMET-609)
+
 ## [4.0.1-OS3]
 ### Fixes
 - Method getLocation is no longer called on cancelled permissions request [RNMT-4280](https://outsystemsrd.atlassian.net/browse/RNMT-4280)
