@@ -133,6 +133,7 @@ public class Geolocation extends CordovaPlugin implements OnLocationResultEventL
             PluginResult result;
 
             if(googleApiAvailability.isUserResolvableError(status)) {
+                googleApiAvailability.getErrorDialog(cordova.getActivity(), status, 1).show();
                 result = new PluginResult(PluginResult.Status.ERROR, LocationError.GOOGLE_SERVICES_ERROR_RESOLVABLE.toJSON());
             }
             else {
