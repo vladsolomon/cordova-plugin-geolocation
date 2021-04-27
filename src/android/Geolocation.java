@@ -282,7 +282,8 @@ public class Geolocation extends CordovaPlugin implements OnLocationResultEventL
                     // by showing the user a dialog.
                     try {
                         // Show the dialog by calling startResolutionForResult(),
-                        // and check the result in onActivityResult().
+                        // and check the result in onActivityResult(). We should do this but it is not working
+                        // so for now we simply call for location updates directly, after presenting the dialog
                         ResolvableApiException resolvable = (ResolvableApiException) e;
                         resolvable.startResolutionForResult(cordova.getActivity(),
                                 REQUEST_CHECK_SETTINGS);
