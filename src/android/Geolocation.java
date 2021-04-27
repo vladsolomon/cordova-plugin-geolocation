@@ -296,8 +296,6 @@ public class Geolocation extends CordovaPlugin implements OnLocationResultEventL
                     result = new PluginResult(PluginResult.Status.ERROR, LocationError.LOCATION_SETTINGS_ERROR.toJSON());
                     locationContext.getCallbackContext().sendPluginResult(result);
                 }
-
-                //locationContext.getCallbackContext().sendPluginResult(result);
                 locationContexts.remove(locationContext.getId());
             }
         };
