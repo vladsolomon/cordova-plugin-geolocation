@@ -5,7 +5,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.Manifest;
 import android.location.Location;
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 
 import android.util.SparseArray;
 
