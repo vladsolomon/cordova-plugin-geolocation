@@ -1,10 +1,12 @@
 package org.apache.cordova.geolocation;
 
 import android.annotation.SuppressLint;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.Manifest;
 import android.location.Location;
 import android.support.annotation.NonNull;
+
 import android.util.SparseArray;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,6 +37,8 @@ public class Geolocation extends CordovaPlugin implements OnLocationResultEventL
 
     private SparseArray<LocationContext> locationContexts;
     private FusedLocationProviderClient fusedLocationClient;
+
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
 
     public static final String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
 
@@ -275,14 +279,24 @@ public class Geolocation extends CordovaPlugin implements OnLocationResultEventL
             public void onFailure(@NonNull Exception e) {
                 PluginResult result;
                 if (e instanceof ResolvableApiException) {
-                    // Location settings are not satisfied, but this can be fixed.
-                    result = new PluginResult(PluginResult.Status.ERROR, LocationError.LOCATION_SETTINGS_ERROR_RESOLVABLE.toJSON());
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    try {
+                        // Show the dialog by calling startResolutionForResult(),
+                        // and check the result in onActivityResult(). We should do this but it is not working
+                        // so for now we simply call for location updates directly, after presenting the dialog
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(cordova.getActivity(),
+                                REQUEST_CHECK_SETTINGS);
+                        requestLocationUpdates(locationContext, request);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        // Ignore the error.
+                    }
                 }
                 else {
                     result = new PluginResult(PluginResult.Status.ERROR, LocationError.LOCATION_SETTINGS_ERROR.toJSON());
+                    locationContext.getCallbackContext().sendPluginResult(result);
                 }
-
-                locationContext.getCallbackContext().sendPluginResult(result);
                 locationContexts.remove(locationContext.getId());
             }
         };

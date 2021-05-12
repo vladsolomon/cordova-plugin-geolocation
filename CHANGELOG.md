@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## 2021-04-27
+- Fix: Fixed requestLocationUpdatesIfSettingsSatisfied method to show the user a dialog to enable location or change location settings (https://outsystemsrd.atlassian.net/browse/RMET-608)
 
 ## 2021-04-23
 - Fix: Fixed checkGooglePlayServicesAvailable method to show the user an error dialog when the error can be resolved (https://outsystemsrd.atlassian.net/browse/RMET-609)
