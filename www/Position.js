@@ -21,7 +21,7 @@
 
 var Coordinates = require('./Coordinates');
 
-var Position = function (coords, timestamp) {
+var Position = function (coords, timestamp, id) {
     if (coords) {
         this.coords = new Coordinates(
             coords.latitude,
@@ -36,6 +36,10 @@ var Position = function (coords, timestamp) {
         this.coords = new Coordinates();
     }
     this.timestamp = timestamp !== undefined ? timestamp : new Date().getTime();
+
+    if (id) {
+        this.watchId = id;
+    }
 };
 
 module.exports = Position;

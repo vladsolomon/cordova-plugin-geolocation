@@ -55,10 +55,13 @@ function parseParameters (options) {
 }
 
 // Returns a timeout failure, closed over a specified timeout value and error callback.
-function createTimeout (errorCallback, timeout) {
+function createTimeout (errorCallback, timeout, isWatch, id) {
     var t = setTimeout(function () {
         clearTimeout(t);
         t = null;
+        if(isWatch === true){
+            geolocation.clearWatch(id);
+        }
         errorCallback({
             code: PositionError.TIMEOUT,
             message: 'Position retrieval timed out.'
@@ -79,6 +82,8 @@ var geolocation = {
     getCurrentPosition: function (successCallback, errorCallback, options) {
         argscheck.checkArgs('fFO', 'geolocation.getCurrentPosition', arguments);
         options = parseParameters(options);
+
+        var id = utils.createUUID();
 
         // Timer var that will fire an error callback if no position is retrieved from native
         // before the "timeout" param provided expires
@@ -102,7 +107,8 @@ var geolocation = {
                     velocity: p.velocity,
                     altitudeAccuracy: p.altitudeAccuracy
                 },
-                p.timestamp
+                p.timestamp,
+                null
             );
             geolocation.lastPosition = pos;
             successCallback(pos);
@@ -137,14 +143,14 @@ var geolocation = {
                 // If the timeout value was not set to Infinity (default), then
                 // set up a timeout function that will fire the error callback
                 // if no successful position was retrieved before timeout expired.
-                timeoutTimer.timer = createTimeout(fail, options.timeout);
+                timeoutTimer.timer = createTimeout(fail, options.timeout, false, null);
             } else {
                 // This is here so the check in the win function doesn't mess stuff up
                 // may seem weird but this guarantees timeoutTimer is
                 // always truthy before we call into native
                 timeoutTimer.timer = true;
             }
-            exec(win, fail, 'Geolocation', 'getLocation', [options.enableHighAccuracy, options.maximumAge]);
+            exec(win, fail, 'Geolocation', 'getLocation', [options.enableHighAccuracy, options.maximumAge, options.timeout, id]);
         }
         return timeoutTimer;
     },
@@ -163,8 +169,7 @@ var geolocation = {
 
         var id = utils.createUUID();
 
-        // Tell device to get a position ASAP, and also retrieve a reference to the timeout timer generated in getCurrentPosition
-        timers[id] = geolocation.getCurrentPosition(successCallback, errorCallback, options);
+        timers[id] = { timer: null };
 
         var fail = function (e) {
             clearTimeout(timers[id].timer);
@@ -177,7 +182,7 @@ var geolocation = {
         var win = function (p) {
             clearTimeout(timers[id].timer);
             if (options.timeout !== Infinity) {
-                timers[id].timer = createTimeout(fail, options.timeout);
+                timers[id].timer = createTimeout(fail, options.timeout, false, null);
             }
             var pos = new Position(
                 {
@@ -189,13 +194,26 @@ var geolocation = {
                     velocity: p.velocity,
                     altitudeAccuracy: p.altitudeAccuracy
                 },
-                p.timestamp
+                p.timestamp,
+                id
             );
             geolocation.lastPosition = pos;
             successCallback(pos);
         };
 
-        exec(win, fail, 'Geolocation', 'addWatch', [id, options.enableHighAccuracy]);
+        if (options.timeout !== Infinity) {
+            // If the timeout value was not set to Infinity (default), then
+            // set up a timeout function that will fire the error callback
+            // if no successful position was retrieved before timeout expired.
+            timers[id].timer = createTimeout(fail, options.timeout, true, id);
+        } else {
+            // This is here so the check in the win function doesn't mess stuff up
+            // may seem weird but this guarantees timeoutTimer is
+            // always truthy before we call into native
+            timers[id].timer = true;
+        }
+
+        exec(win, fail, 'Geolocation', 'addWatch', [id, options.enableHighAccuracy, options.maximumAge]);
 
         return id;
     },
